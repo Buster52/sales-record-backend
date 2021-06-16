@@ -1,7 +1,7 @@
-package com.buster.backend.models.dao;
+package com.buster.backend.repository;
 
 import com.buster.backend.model.Producto;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface IProductDao extends CrudRepository<Producto, Long> {
+public interface ProductRepository extends JpaRepository<Producto, Long> {
 }
