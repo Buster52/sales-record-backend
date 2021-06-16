@@ -1,73 +1,39 @@
-package com.buster.backend.models.entity;
+package com.buster.backend.model;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
-@Table(name = "productos")
 public class Producto implements Serializable {
     @Id
-    @Column(name = "id_producto")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idProducto;
 
-    private String nombre;
+    @NotBlank(message = "Name is required")
+    private String name;
 
-    private String descripcion;
+    private String description;
 
-    private Integer cantidad;
+    @NotNull
+    private Integer amount;
 
-    private Double precio;
+    @NotNull
+    private Double price;
 
-    @ManyToOne
-    @JoinColumn(name = "tipoproducto_id")
-    private TipoProducto tipo;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id", referencedColumnName = "id")
+    private TipoProducto type;
 
-    public Long getIdProducto() {
-        return idProducto;
-    }
-
-    public void setIdProducto(Long idProducto) {
-        this.idProducto = idProducto;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public Integer getCantidad() {
-        return cantidad;
-    }
-
-    public void setCantidad(Integer cantidad) {
-        this.cantidad = cantidad;
-    }
-
-    public Double getPrecio() {
-        return precio;
-    }
-
-    public void setPrecio(Double precio) {
-        this.precio = precio;
-    }
-
-    public TipoProducto getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(TipoProducto tipo) {
-        this.tipo = tipo;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId", referencedColumnName = "userId")
+    private Usuario user;
 }

@@ -1,4 +1,4 @@
-package com.buster.backend.models.entity;
+package com.buster.backend.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
