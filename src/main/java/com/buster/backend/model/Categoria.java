@@ -1,20 +1,16 @@
 package com.buster.backend.model;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.List;
 
 @Entity
-public class TipoProducto implements Serializable {
+public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long categoriaId;
 
-    private String nombreTipo;
-
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<Producto> productos;
+    private String nombre;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId", referencedColumnName = "userId")
     private Usuario usuario;
 }
