@@ -16,5 +16,5 @@ public class TipoProducto implements Serializable {
     private List<Producto> productos;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Usuario user;
+    private Usuario usuario;
 }
