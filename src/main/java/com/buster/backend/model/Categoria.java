@@ -20,13 +20,13 @@ public class Categoria {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "userId")
-    private Usuario user;
+    private Usuario usuario;
 
-    public Categoria(Long id, String name, List<Producto> products, Usuario user) {
+    public Categoria(Long id, String name, List<Producto> products, Usuario usuario) {
         this.id = id;
         this.name = name;
         this.products = products;
-        this.user = user;
+        this.usuario = usuario;
     }
 
     public Categoria() {
@@ -56,11 +56,11 @@ public class Categoria {
         this.products = products;
     }
 
-    public Usuario getUser() {
-        return user;
+    public Usuario getUsuario() {
+        return usuario;
     }
 
-    public void setUser(Usuario user) {
-        this.user = user;
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 }
