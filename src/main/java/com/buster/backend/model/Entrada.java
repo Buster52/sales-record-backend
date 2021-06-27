@@ -19,10 +19,10 @@ public class Entrada {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "idProducto", referencedColumnName = "idProducto")
-    private Producto producto;
+    @JoinColumn(name = "productId", referencedColumnName = "productId")
+    private Producto product;
 
-    private int cantidad;
+    private int amount;
 
-    private Instant fecha;
+    private Instant date;
 }

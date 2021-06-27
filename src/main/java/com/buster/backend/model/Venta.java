@@ -15,17 +15,17 @@ import java.io.Serializable;
 public class Venta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idVenta;
+    private Long saleId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "userId")
     private Usuario usuario;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idProducto", referencedColumnName = "idProducto")
-    private Producto producto;
+    @JoinColumn(name = "productId", referencedColumnName = "productId")
+    private Producto product;
 
-    private Long cantidad;
+    private Long amount;
 
     private Double total;
 }

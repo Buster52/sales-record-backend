@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 public class Producto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idProducto;
+    private Long productId;
 
     @NotBlank(message = "Name is required")
     private String name;
@@ -30,8 +30,8 @@ public class Producto {
     private Double price;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "categoriaId", referencedColumnName = "categoriaId")
-    private Categoria categoria;
+    @JoinColumn(name = "id", referencedColumnName = "id")
+    private Categoria category;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "userId")
