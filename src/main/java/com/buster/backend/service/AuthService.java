@@ -89,4 +89,15 @@ public class AuthService {
         String token = jwtProvider.generateToken(authenticate);
         return new AuthenticationResponse(token, loginRequest.getUsername());
     }
+
+    @Transactional(readOnly = true)
+    public Usuario getCurrentUser() {
+        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User)
+                SecurityContextHolder
+                        .getContext()
+                        .getAuthentication()
+                        .getPrincipal();
+        return usuarioRepository.findByUsername(principal.getUsername())
+                .orElseThrow(() -> new CustomException("User name not found - " + principal.getUsername()));
+    }
 }
