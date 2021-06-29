@@ -3,18 +3,20 @@ package com.buster.backend.dto;
 import lombok.Builder;
 
 @Builder
-public class CategoriaDTO {
+public class CategoryResponse {
     private Long id;
-    private String name;
+    private String categoryName;
     private Integer numberOfProducts;
+    private String userName;
 
-    public CategoriaDTO(Long id, String name, Integer numberOfProducts) {
-        this.id = id;
-        this.name = name;
-        this.numberOfProducts = numberOfProducts;
+    public CategoryResponse() {
     }
 
-    public CategoriaDTO() {
+    public CategoryResponse(Long id, String name, Integer numberOfProducts, String userName) {
+        this.id = id;
+        this.categoryName = name;
+        this.numberOfProducts = numberOfProducts;
+        this.userName = userName;
     }
 
     public Long getId() {
@@ -25,12 +27,12 @@ public class CategoriaDTO {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getCategoryName() {
+        return categoryName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     public Integer getNumberOfProducts() {
@@ -39,5 +41,13 @@ public class CategoriaDTO {
 
     public void setNumberOfProducts(Integer numberOfProducts) {
         this.numberOfProducts = numberOfProducts;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }
