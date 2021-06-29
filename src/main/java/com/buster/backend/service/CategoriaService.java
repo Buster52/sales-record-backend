@@ -1,6 +1,7 @@
 package com.buster.backend.service;
 
-import com.buster.backend.dto.CategoriaDTO;
+import com.buster.backend.dto.CategoryRequest;
+import com.buster.backend.dto.CategoryResponse;
 import com.buster.backend.exceptions.CustomException;
 import com.buster.backend.mapper.CategoriaMapper;
 import com.buster.backend.model.Categoria;
@@ -20,25 +21,27 @@ public class CategoriaService {
 
     private final CategoriaRepository categoriaRepository;
     private final CategoriaMapper categoriaMapper;
+    private final AuthService authService;
 
-    public CategoriaDTO save(CategoriaDTO categoriaDTO) {
-        Categoria save = categoriaRepository.save(categoriaMapper.fromDto(categoriaDTO));
-        categoriaDTO.setId(save.getId());
-        return categoriaDTO;
+    @Transactional
+    public CategoryRequest save(CategoryRequest categoryRequest) {
+        Categoria save = categoriaRepository.save(categoriaMapper.map(categoryRequest, authService.getCurrentUser()));
+        categoryRequest.setCategoryId(save.getCategoryId());
+        return categoryRequest;
     }
 
     @Transactional(readOnly = true)
-    public List<CategoriaDTO> getAll() {
+    public List<CategoryResponse> getAll() {
         return categoriaRepository.findAll()
                 .stream()
-                .map(categoriaMapper::toDto)
+                .map(categoriaMapper::mapToDto)
                 .collect(Collectors.toList());
     }
 
-    public CategoriaDTO getCategoria(Long id) {
+    public CategoryResponse getCategoria(Long id) {
         Categoria categoria = categoriaRepository.findById(id)
                 .orElseThrow(() ->
                         new CustomException("No category found with this id"));
-        return categoriaMapper.toDto(categoria);
+        return categoriaMapper.mapToDto(categoria);
     }
 }
