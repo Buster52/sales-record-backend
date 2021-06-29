@@ -11,7 +11,7 @@ import java.util.List;
 public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long categoryId;
 
     private String name;
 
@@ -22,8 +22,8 @@ public class Categoria {
     @JoinColumn(name = "userId", referencedColumnName = "userId")
     private Usuario usuario;
 
-    public Categoria(Long id, String name, List<Producto> products, Usuario usuario) {
-        this.id = id;
+    public Categoria(Long categoryId, String name, List<Producto> products, Usuario usuario) {
+        this.categoryId = categoryId;
         this.name = name;
         this.products = products;
         this.usuario = usuario;
@@ -32,12 +32,12 @@ public class Categoria {
     public Categoria() {
     }
 
-    public Long getId() {
-        return id;
+    public Long getCategoryId() {
+        return categoryId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 
     public String getName() {
