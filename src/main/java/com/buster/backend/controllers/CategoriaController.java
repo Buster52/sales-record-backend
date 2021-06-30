@@ -2,6 +2,7 @@ package com.buster.backend.controllers;
 
 import com.buster.backend.dto.CategoryRequest;
 import com.buster.backend.dto.CategoryResponse;
+import com.buster.backend.model.Categoria;
 import com.buster.backend.service.CategoriaService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,30 +24,19 @@ public class CategoriaController {
     private final CategoriaService categoriaService;
 
     @PostMapping
-    public ResponseEntity<?> crearCategoria(@RequestBody CategoryRequest categoryRequest) {
-        Map<String, Object> resp = new HashMap<>();
-        try {
-            categoriaService.save(categoryRequest);
-        } catch (DataAccessException e) {
-            resp.put("message", "Ha ocurrido un error.");
-            resp.put("error", e.getMessage());
-            return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        resp.put("message", "Categoria agregada exitosamente");
-        resp.put("categoria", categoryRequest);
-        return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.CREATED);
+    public ResponseEntity<CategoryRequest> crearCategoria(@RequestBody CategoryRequest categoryRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(categoriaService.save(categoryRequest));
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoryResponse>> ObtenerCategorias() {
+    public ResponseEntity<List<CategoryResponse>> getAll() {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(categoriaService.getAll());
     }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<CategoryResponse> getCategoria(@PathVariable Long id) {
-//        return ResponseEntity
-//                .status(HttpStatus.OK)
-//                .body(categoriaService.getCategoria(id));
-//    }
+    @GetMapping("/{id}")
+    public ResponseEntity<CategoryResponse> getCategoriaById(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(categoriaService.getCategoria(id));
+    }
 }
