@@ -8,10 +8,15 @@ import com.buster.backend.model.Categoria;
 import com.buster.backend.repository.CategoriaRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,8 +30,8 @@ public class CategoriaService {
 
     @Transactional
     public CategoryRequest save(CategoryRequest categoryRequest) {
-        Categoria save = categoriaRepository.save(categoriaMapper.map(categoryRequest, authService.getCurrentUser()));
-        categoryRequest.setCategoryId(save.getCategoryId());
+        Categoria cat = categoriaRepository.save(categoriaMapper.map(categoryRequest, authService.getCurrentUser()));
+        categoryRequest.setCategoryId(cat.getCategoryId());
         return categoryRequest;
     }
 
@@ -41,7 +46,7 @@ public class CategoriaService {
     public CategoryResponse getCategoria(Long id) {
         Categoria categoria = categoriaRepository.findById(id)
                 .orElseThrow(() ->
-                        new CustomException("No category found with this id"));
+                        new CustomException("No existe la categoria con ese id."));
         return categoriaMapper.mapToDto(categoria);
     }
 }
