@@ -3,7 +3,6 @@ package com.buster.backend.model;
 import lombok.Builder;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Builder
 @Entity
@@ -15,17 +14,13 @@ public class Categoria {
 
     private String name;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<Producto> products;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "userId", referencedColumnName = "userId")
     private Usuario usuario;
 
-    public Categoria(Long categoryId, String name, List<Producto> products, Usuario usuario) {
+    public Categoria(Long categoryId, String name, Usuario usuario) {
         this.categoryId = categoryId;
         this.name = name;
-        this.products = products;
         this.usuario = usuario;
     }
 
@@ -46,14 +41,6 @@ public class Categoria {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public List<Producto> getProducts() {
-        return products;
-    }
-
-    public void setProducts(List<Producto> products) {
-        this.products = products;
     }
 
     public Usuario getUsuario() {
