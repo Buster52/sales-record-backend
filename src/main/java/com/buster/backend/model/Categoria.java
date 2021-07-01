@@ -3,6 +3,7 @@ package com.buster.backend.model;
 import lombok.Builder;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Builder
 @Entity
@@ -12,6 +13,7 @@ public class Categoria {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long categoryId;
 
+    @NotBlank(message = "name is required")
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
