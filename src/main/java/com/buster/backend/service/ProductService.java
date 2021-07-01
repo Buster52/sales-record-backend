@@ -29,12 +29,11 @@ public class ProductService {
     private final ProductoMapper productoMapper;
 
     @Transactional
-    public ProductRequest save(ProductRequest productRequest) {
+    public void save(ProductRequest productRequest) {
         Categoria categoria = categoriaRepository.findByName(productRequest.getCategory())
                 .orElseThrow(() -> new CustomException(productRequest.getCategory()));
         Producto pr = productoRepo.save(productoMapper.map(productRequest, categoria, authService.getCurrentUser()));
         productRequest.setProductId(pr.getProductId());
-        return productRequest;
     }
 
     @Transactional(readOnly = true)
