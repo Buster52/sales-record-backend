@@ -4,11 +4,14 @@ import com.buster.backend.dto.ProductRequest;
 import com.buster.backend.dto.ProductResponse;
 import com.buster.backend.service.ProductService;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/productos")
@@ -19,8 +22,16 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<?> crearProducto(@RequestBody ProductRequest productRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(productService.save(productRequest));
+        Map<String, Object> resp = new HashMap<>();
+        try {
+            productService.save(productRequest);
+        } catch (DataAccessException e) {
+            resp.put("message", "Ha ocurrido un error.");
+            resp.put("error", e.getMessage());
+            return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        resp.put("message", "Agregado exitosamente");
+        return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.CREATED);
     }
 
     @GetMapping
