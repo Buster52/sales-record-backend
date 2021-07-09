@@ -1,17 +1,20 @@
 package com.buster.backend.dto;
 
+import lombok.Builder;
+
+@Builder
 public class ProductRequest {
     private Long productId;
     private String productName;
     private String description;
     private String category;
-    private Integer amount;
+    private Long amount;
     private Double price;
 
     public ProductRequest() {
     }
 
-    public ProductRequest(Long productId, String productName, String description, String category, Integer amount, Double price) {
+    public ProductRequest(Long productId, String productName, String description, String category, Long amount, Double price) {
         this.productId = productId;
         this.productName = productName;
         this.description = description;
@@ -52,11 +55,11 @@ public class ProductRequest {
         this.category = category;
     }
 
-    public Integer getAmount() {
+    public Long getAmount() {
         return amount;
     }
 
-    public void setAmount(Integer amount) {
+    public void setAmount(Long amount) {
         this.amount = amount;
     }
 

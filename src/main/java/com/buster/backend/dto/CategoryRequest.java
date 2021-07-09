@@ -1,5 +1,8 @@
 package com.buster.backend.dto;
 
+import lombok.Builder;
+
+@Builder
 public class CategoryRequest {
     private Long categoryId;
     private String name;

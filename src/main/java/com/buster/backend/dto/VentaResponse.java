@@ -2,8 +2,8 @@ package com.buster.backend.dto;
 
 import java.time.Instant;
 
-public class VentaDto {
-    private Long saleId;
+public class VentaResponse {
+    private Long id;
 
     private String clientName;
 
@@ -19,13 +19,13 @@ public class VentaDto {
 
     private String userName;
 
-    private Instant date;
+    private String date;
 
-    public VentaDto() {
+    public VentaResponse() {
     }
 
-    public VentaDto(Long saleId, String clientName, String productName, Long amount, Double pay, Double balance, Double total, String userName, Instant date) {
-        this.saleId = saleId;
+    public VentaResponse(Long id, String clientName, String productName, Long amount, Double pay, Double balance, Double total, String userName, String date) {
+        this.id = id;
         this.clientName = clientName;
         this.productName = productName;
         this.amount = amount;
@@ -36,12 +36,12 @@ public class VentaDto {
         this.date = date;
     }
 
-    public Long getSaleId() {
-        return saleId;
+    public Long getId() {
+        return id;
     }
 
-    public void setSaleId(Long saleId) {
-        this.saleId = saleId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getClientName() {
@@ -100,11 +100,11 @@ public class VentaDto {
         this.userName = userName;
     }
 
-    public Instant getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Instant date) {
+    public void setDate(String date) {
         this.date = date;
     }
 }

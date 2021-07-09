@@ -22,7 +22,7 @@ public class Producto {
     private String description;
 
     @NotNull
-    private Integer amount;
+    private Long amount;
 
     @NotNull
     private Double price;
@@ -38,7 +38,7 @@ public class Producto {
     public Producto() {
     }
 
-    public Producto(Long productId, String name, String description, Integer amount, Double price, Categoria categoria, Usuario usuario) {
+    public Producto(Long productId, String name, String description, Long amount, Double price, Categoria categoria, Usuario usuario) {
         this.productId = productId;
         this.name = name;
         this.description = description;
@@ -72,11 +72,11 @@ public class Producto {
         this.description = description;
     }
 
-    public Integer getAmount() {
+    public Long getAmount() {
         return amount;
     }
 
-    public void setAmount(Integer amount) {
+    public void setAmount(Long amount) {
         this.amount = amount;
     }
 
