@@ -2,11 +2,11 @@ package com.buster.backend.controllers;
 
 import com.buster.backend.dto.CategoryRequest;
 import com.buster.backend.dto.CategoryResponse;
-import com.buster.backend.model.Categoria;
+import com.buster.backend.exceptions.AlreadyExistsException;
+import com.buster.backend.exceptions.NotFoundException;
 import com.buster.backend.service.CategoriaService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +24,14 @@ public class CategoriaController {
     private final CategoriaService categoriaService;
 
     @PostMapping
-    public ResponseEntity<CategoryRequest> crearCategoria(@RequestBody CategoryRequest categoryRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(categoriaService.save(categoryRequest));
+    public ResponseEntity<?> createCategory(@RequestBody CategoryRequest categoryRequest) {
+        Map<String, Object> resp = new HashMap<>();
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED).body(categoriaService.save(categoryRequest));
+        } catch (AlreadyExistsException alreadyExistsException) {
+            resp.put("error", alreadyExistsException.getMessage());
+            return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.CONFLICT);
+        }
     }
 
     @GetMapping
@@ -35,8 +41,14 @@ public class CategoriaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CategoryResponse> getCategoriaById(@PathVariable Long id) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(categoriaService.getCategoria(id));
+    public ResponseEntity<?> getCategoryById(@PathVariable Long id) {
+        Map<String, Object> resp = new HashMap<>();
+        try {
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(categoriaService.getCategoryById(id));
+        } catch (NotFoundException notFoundException) {
+            resp.put("error", notFoundException.getMessage());
+            return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.CONFLICT);
+        }
     }
 }

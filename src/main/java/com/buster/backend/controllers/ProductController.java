@@ -4,7 +4,6 @@ import com.buster.backend.dto.ProductRequest;
 import com.buster.backend.dto.ProductResponse;
 import com.buster.backend.service.ProductService;
 import lombok.AllArgsConstructor;
-import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +24,7 @@ public class ProductController {
         Map<String, Object> resp = new HashMap<>();
         try {
             productService.save(productRequest);
-        } catch (DataAccessException e) {
+        } catch (Exception e) {
             resp.put("message", "Ha ocurrido un error.");
             resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
