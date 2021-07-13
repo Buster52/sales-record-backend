@@ -2,7 +2,8 @@ package com.buster.backend.service;
 
 import com.buster.backend.dto.CategoryRequest;
 import com.buster.backend.dto.CategoryResponse;
-import com.buster.backend.exceptions.CustomException;
+import com.buster.backend.exceptions.AlreadyExistsException;
+import com.buster.backend.exceptions.NotFoundException;
 import com.buster.backend.mapper.CategoriaMapper;
 import com.buster.backend.model.Categoria;
 import com.buster.backend.repository.CategoriaRepository;
@@ -25,23 +26,29 @@ public class CategoriaService {
 
     @Transactional
     public CategoryRequest save(CategoryRequest categoryRequest) {
+        if (categoriaRepository.findByName(categoryRequest.getName()).isPresent()) {
+            throw new AlreadyExistsException("Ya existe categoria con nombre - " + categoryRequest.getName());
+        }
         Categoria cat = categoriaRepository.save(categoriaMapper.map(categoryRequest, authService.getCurrentUser()));
         categoryRequest.setCategoryId(cat.getCategoryId());
         return categoryRequest;
     }
 
     @Transactional(readOnly = true)
-    public List<CategoryResponse> getAll() {
+    public List<CategoryResponse> getAll() throws NotFoundException {
         return categoriaRepository.findAll()
                 .stream()
                 .map(categoriaMapper::mapToDto)
                 .collect(Collectors.toList());
     }
 
-    public CategoryResponse getCategoria(Long id) {
-        Categoria categoria = categoriaRepository.findById(id)
-                .orElseThrow(() ->
-                        new CustomException("No existe la categoria con ese id."));
-        return categoriaMapper.mapToDto(categoria);
+    public CategoryResponse getCategoryById(Long id) {
+        Categoria cat;
+        if (categoriaRepository.findById(id).isEmpty()) {
+            throw new NotFoundException("No existe categoria con id - " + id);
+        } else {
+            cat = categoriaRepository.findById(id).get();
+        }
+        return categoriaMapper.mapToDto(cat);
     }
 }
