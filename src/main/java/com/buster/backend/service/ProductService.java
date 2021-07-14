@@ -2,7 +2,9 @@ package com.buster.backend.service;
 
 import com.buster.backend.dto.ProductRequest;
 import com.buster.backend.dto.ProductResponse;
+import com.buster.backend.exceptions.AlreadyExistsException;
 import com.buster.backend.exceptions.CustomException;
+import com.buster.backend.exceptions.NotFoundException;
 import com.buster.backend.mapper.ProductoMapper;
 import com.buster.backend.model.Categoria;
 import com.buster.backend.model.Producto;
@@ -31,7 +33,10 @@ public class ProductService {
     @Transactional
     public void save(ProductRequest productRequest) {
         Categoria categoria = categoriaRepository.findByName(productRequest.getCategory())
-                .orElseThrow(() -> new CustomException(productRequest.getCategory()));
+                .orElseThrow(() -> new NotFoundException("No existe categoria con ese nombre"));
+        if (productoRepo.findByName(productRequest.getProductName()).isPresent()) {
+            throw new AlreadyExistsException("Ya existe producto con ese nombre");
+        }
         Producto pr = productoRepo.save(productoMapper.map(productRequest, categoria, authService.getCurrentUser()));
         productRequest.setProductId(pr.getProductId());
     }
@@ -39,7 +44,7 @@ public class ProductService {
     @Transactional(readOnly = true)
     public ProductResponse getProduct(Long id) {
         Producto producto = productoRepo.findById(id)
-                .orElseThrow(() -> new CustomException(id.toString()));
+                .orElseThrow(() -> new NotFoundException("No existe producto con id - " + id));
         return productoMapper.mapToDto(producto);
     }
 
@@ -54,7 +59,7 @@ public class ProductService {
     @Transactional(readOnly = true)
     public List<ProductResponse> getProductByCategoria(Long categoriaId) {
         Categoria categoria = categoriaRepository.findById(categoriaId)
-                .orElseThrow(() -> new CustomException(categoriaId.toString()));
+                .orElseThrow(() -> new NotFoundException("No existe esta categoria."));
         List<Producto> productos = productoRepo
                 .findAllByCategoria(categoria);
         return productos.stream()
@@ -65,7 +70,7 @@ public class ProductService {
     @Transactional(readOnly = true)
     public List<ProductResponse> getProductsByUsername(String username) {
         Usuario usuario = usuarioRepository.findByUsername(username)
-                .orElseThrow(() -> new CustomException(username));
+                .orElseThrow(() -> new NotFoundException("No existe este usuario."));
         return productoRepo.findByUsuario(usuario)
                 .stream()
                 .map(productoMapper::mapToDto)
