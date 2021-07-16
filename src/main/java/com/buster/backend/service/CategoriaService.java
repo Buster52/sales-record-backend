@@ -42,13 +42,17 @@ public class CategoriaService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public CategoryResponse getCategoryById(Long id) {
-        Categoria cat;
-        if (categoriaRepository.findById(id).isEmpty()) {
-            throw new NotFoundException("No existe categoria con id - " + id);
-        } else {
-            cat = categoriaRepository.findById(id).get();
-        }
+//        Categoria cat;
+//        if (categoriaRepository.findById(id).isEmpty()) {
+//            throw new NotFoundException("No existe categoria con id - " + id);
+//        } else {
+//            cat = categoriaRepository.findById(id).get();
+//        }
+//        return categoriaMapper.mapToDto(cat);
+        Categoria cat = categoriaRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("no existe"));
         return categoriaMapper.mapToDto(cat);
     }
 }

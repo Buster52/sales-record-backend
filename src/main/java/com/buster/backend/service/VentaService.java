@@ -2,7 +2,7 @@ package com.buster.backend.service;
 
 import com.buster.backend.dto.VentaRequest;
 import com.buster.backend.dto.VentaResponse;
-import com.buster.backend.exceptions.CustomException;
+import com.buster.backend.exceptions.NotFoundException;
 import com.buster.backend.mapper.VentaMapper;
 import com.buster.backend.model.Producto;
 import com.buster.backend.model.Venta;
@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,11 +29,16 @@ public class VentaService {
 
     @Transactional
     public void save(VentaRequest ventaRequest) {
-        Producto producto = productRepository.findByName(ventaRequest.getProductName());
-        if (producto != null && producto.getAmount() > 0) {
-            Venta venta = ventaRepository.save(ventaMapper.map(ventaRequest, producto, authService.getCurrentUser()));
+        Optional<Producto> producto = productRepository.findByName(ventaRequest.getProductName());
+        if (producto.isEmpty()) {
+            throw new NotFoundException("No existe ese producto.");
+        }
+        if (producto.get().getAmount() > 0) {
+            Venta venta = ventaRepository.save(ventaMapper.map(ventaRequest, producto.get(), authService.getCurrentUser()));
             ventaRequest.setSaleId(venta.getSaleId());
         }
+        producto.get().setAmount(producto.get().getAmount() - ventaRequest.getAmount());
+        productRepository.save(producto.get());
     }
 
     @Transactional(readOnly = true)
@@ -44,13 +50,17 @@ public class VentaService {
     }
 
     @Transactional
-    public void updatePay(Long id, VentaRequest ventaRequest) {
-        Venta venta = ventaRepository.findById(id)
-                .orElseThrow(() -> new CustomException("No existe venta con id - " + id));
-        Producto producto = productRepository.findByName(ventaRequest.getProductName());
-        if (producto != null) {
-            venta.setPay(ventaRequest.getPay());
-            ventaRepository.save(ventaMapper.map(ventaRequest, producto, authService.getCurrentUser()));
+    public void updatePay(VentaRequest ventaRequest, Long id) {
+        Venta venta = ventaRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("No existe venta con id - " + id)
+        );
+        Optional<Producto> producto = productRepository.findByName(ventaRequest.getProductName());
+        if (producto.isPresent()) {
+            Double totalPay = venta.getPay() + ventaRequest.getPay();
+            Double balance = venta.getBalance() - ventaRequest.getPay();
+            venta.setPay(totalPay);
+            venta.setBalance(balance);
+            ventaRepository.save(venta);
         }
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 @Mapper(componentModel = "spring")
 public abstract class VentaMapper {
@@ -31,8 +32,12 @@ public abstract class VentaMapper {
     public abstract Venta map(VentaRequest ventaRequest, Producto producto, Usuario usuario);
 
     Double getTotal(VentaRequest ventaRequest, boolean isTotal) {
-        Producto producto = productoRepo.findByName(ventaRequest.getProductName());
-        Double totalPay = ventaRequest.getAmount() * producto.getPrice();
+        Optional<Producto> producto = productoRepo.findByName(ventaRequest.getProductName());
+        Double price = 0.0;
+        if (producto.isPresent()) {
+            price = producto.get().getPrice();
+        }
+        Double totalPay = ventaRequest.getAmount() * price;
         Double balance = totalPay - ventaRequest.getPay();
 
         if (!isTotal) {
