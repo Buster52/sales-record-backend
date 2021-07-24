@@ -17,7 +17,7 @@ import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Instant;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -44,7 +44,7 @@ class CategoriaServiceTest {
     }
 
     @Test
-    @DisplayName("Debe retornar categoia por id")
+    @DisplayName("Debe retornar categoria por id")
     public void testGetById() {
         Categoria c1 = new Categoria(1L, "Gaming", null);
         CategoryResponse expected = new CategoryResponse(
@@ -64,7 +64,6 @@ class CategoriaServiceTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("Guardar categoria")
     public void testSave() {
         Usuario currentUser = new Usuario(123L, "test user", "test",
@@ -79,5 +78,19 @@ class CategoriaServiceTest {
         Mockito.verify(categoriaRepository).save(categoriaArgumentCaptor.capture());
 
         Assertions.assertThat(categoriaArgumentCaptor.getValue().getCategoryId()).isEqualTo(123L);
+    }
+
+    @Test
+    @DisplayName("Debe devolver todas las categorias")
+    void testGetAll() {
+        List<Categoria> categories = new ArrayList<>();
+        categories.add(new Categoria(1L, "Gaming", null));
+
+        Mockito.when(categoriaRepository.findAll()).thenReturn(categories);
+
+        List<CategoryResponse> items = categoriaService.getAll();
+
+        assertEquals(1, items.size());
+        Mockito.verify(categoriaRepository).findAll();
     }
 }
