@@ -3,6 +3,7 @@ package com.buster.backend.service;
 import com.buster.backend.dto.CategoryRequest;
 import com.buster.backend.dto.CategoryResponse;
 import com.buster.backend.exceptions.AlreadyExistsException;
+import com.buster.backend.exceptions.CustomException;
 import com.buster.backend.exceptions.NotFoundException;
 import com.buster.backend.mapper.CategoriaMapper;
 import com.buster.backend.model.Categoria;
@@ -25,13 +26,15 @@ public class CategoriaService {
     private final AuthService authService;
 
     @Transactional
-    public CategoryRequest save(CategoryRequest categoryRequest) {
+    public void save(CategoryRequest categoryRequest) {
         if (categoriaRepository.findByName(categoryRequest.getName()).isPresent()) {
             throw new AlreadyExistsException("Ya existe categoria con nombre - " + categoryRequest.getName());
         }
-        Categoria cat = categoriaRepository.save(categoriaMapper.map(categoryRequest, authService.getCurrentUser()));
-        categoryRequest.setCategoryId(cat.getCategoryId());
-        return categoryRequest;
+        Categoria catMapped = categoriaMapper.map(categoryRequest, authService.getCurrentUser());
+        if (catMapped == null) {
+            throw new CustomException("El objeto mapeado es nulo");
+        }
+        categoriaRepository.save(catMapped);
     }
 
     @Transactional(readOnly = true)
@@ -44,13 +47,6 @@ public class CategoriaService {
 
     @Transactional(readOnly = true)
     public CategoryResponse getCategoryById(Long id) {
-//        Categoria cat;
-//        if (categoriaRepository.findById(id).isEmpty()) {
-//            throw new NotFoundException("No existe categoria con id - " + id);
-//        } else {
-//            cat = categoriaRepository.findById(id).get();
-//        }
-//        return categoriaMapper.mapToDto(cat);
         Categoria cat = categoriaRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("no existe"));
         return categoriaMapper.mapToDto(cat);
