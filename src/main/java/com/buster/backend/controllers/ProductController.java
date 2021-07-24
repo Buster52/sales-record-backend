@@ -45,19 +45,19 @@ public class ProductController {
         Map<String, Object> resp = new HashMap<>();
         try {
             return ResponseEntity.status(HttpStatus.OK)
-                    .body(productService.getProduct(id));
+                    .body(productService.getProductById(id));
         } catch (NotFoundException notFoundException) {
             resp.put("error", notFoundException.getMessage());
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.CONFLICT);
         }
     }
 
-    @GetMapping("by-categoria/{id}")
-    public ResponseEntity<?> getProductsByCategoria(@PathVariable Long id) {
+    @GetMapping("by-categoria/{categoryName}")
+    public ResponseEntity<?> getProductsByCategoria(@PathVariable String categoryName) {
         Map<String, Object> resp = new HashMap<>();
         try {
             return ResponseEntity.status(HttpStatus.OK)
-                    .body(productService.getProductByCategoria(id));
+                    .body(productService.getProductByCategoria(categoryName));
         } catch (NotFoundException notFoundException) {
             resp.put("error", notFoundException.getMessage());
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.CONFLICT);
