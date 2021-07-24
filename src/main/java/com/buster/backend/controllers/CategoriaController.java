@@ -27,7 +27,8 @@ public class CategoriaController {
     public ResponseEntity<?> createCategory(@RequestBody CategoryRequest categoryRequest) {
         Map<String, Object> resp = new HashMap<>();
         try {
-            return ResponseEntity.status(HttpStatus.CREATED).body(categoriaService.save(categoryRequest));
+            categoriaService.save(categoryRequest);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Agregado exitosamente");
         } catch (AlreadyExistsException alreadyExistsException) {
             resp.put("error", alreadyExistsException.getMessage());
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.CONFLICT);
