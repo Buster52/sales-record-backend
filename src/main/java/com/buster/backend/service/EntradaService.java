@@ -27,19 +27,18 @@ public class EntradaService {
     private final AuthService authService;
 
     @Transactional
-    public EntradaDto save(EntradaDto entradaDto) {
+    public void save(EntradaDto entradaDto) {
         Optional<Producto> producto = productRepository.findByName(entradaDto.getProductName());
         if (producto.isEmpty()) {
             throw new NotFoundException("No existe el producto con el nombre - " + entradaDto.getProductName());
-        } else {
-            Entrada entrada = entradaRepository.save(entradaMapper.map(entradaDto, producto.get(), authService.getCurrentUser()));
-            entradaDto.setId(entrada.getId());
-            producto.get().setAmount(producto.get().getAmount() + entradaDto.getAmount());
-            productRepository.save(producto.get());
         }
-        return entradaDto;
+        Entrada entradaMapped = entradaMapper.map(entradaDto, producto.get(), authService.getCurrentUser());
+        entradaRepository.save(entradaMapped);
+        producto.get().setAmount(producto.get().getAmount() + entradaDto.getAmount());
+        productRepository.save(producto.get());
     }
 
+    @Transactional(readOnly = true)
     public List<EntradaDto> getAll() {
         return entradaRepository.findAll()
                 .stream()
