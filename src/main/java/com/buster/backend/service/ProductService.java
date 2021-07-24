@@ -37,12 +37,12 @@ public class ProductService {
         if (productoRepo.findByName(productRequest.getProductName()).isPresent()) {
             throw new AlreadyExistsException("Ya existe producto con ese nombre");
         }
-        Producto pr = productoRepo.save(productoMapper.map(productRequest, categoria, authService.getCurrentUser()));
-        productRequest.setProductId(pr.getProductId());
+        Producto productMapped = productoMapper.map(productRequest, categoria, authService.getCurrentUser());
+        productoRepo.save(productMapped);
     }
 
     @Transactional(readOnly = true)
-    public ProductResponse getProduct(Long id) {
+    public ProductResponse getProductById(Long id) {
         Producto producto = productoRepo.findById(id)
                 .orElseThrow(() -> new NotFoundException("No existe producto con id - " + id));
         return productoMapper.mapToDto(producto);
@@ -57,8 +57,8 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductResponse> getProductByCategoria(Long categoriaId) {
-        Categoria categoria = categoriaRepository.findById(categoriaId)
+    public List<ProductResponse> getProductByCategoria(String categoryName) {
+        Categoria categoria = categoriaRepository.findByName(categoryName)
                 .orElseThrow(() -> new NotFoundException("No existe esta categoria."));
         List<Producto> productos = productoRepo
                 .findAllByCategoria(categoria);
