@@ -21,7 +21,8 @@ public class EntradaController {
     public ResponseEntity<?> createEntrada(@RequestBody EntradaDto entradaDto) {
         Map<String, Object> resp = new HashMap<>();
         try {
-            return new ResponseEntity<>(entradaService.save(entradaDto), HttpStatus.CREATED);
+            entradaService.save(entradaDto);
+            return new ResponseEntity<>("Guardado correctamente", HttpStatus.CREATED);
         } catch (NotFoundException e) {
             resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
