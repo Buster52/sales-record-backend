@@ -37,10 +37,10 @@ public class VentaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updatePay(@RequestBody VentaRequest ventaRequest, @PathVariable Long id) {
+    public ResponseEntity<?> updatePay(@RequestBody Double pay, @PathVariable Long id) {
         Map<String, Object> resp = new HashMap<>();
         try {
-            ventaService.updatePay(ventaRequest, id);
+            ventaService.updatePay(pay, id);
         } catch (NotFoundException e) {
             resp.put("error", e.getMessage());
             return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
