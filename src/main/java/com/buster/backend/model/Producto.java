@@ -4,6 +4,7 @@ package com.buster.backend.model;
 import lombok.Builder;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -22,6 +23,7 @@ public class Producto {
     private String description;
 
     @NotNull
+    @Min(value = 1)
     private Long amount;
 
     @NotNull

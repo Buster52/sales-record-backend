@@ -1,6 +1,7 @@
 package com.buster.backend.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
@@ -20,13 +21,16 @@ public class Venta {
     private Producto producto;
 
     @NotNull
+    @Min(value = 1)
     private Long amount;
 
     @NotNull
     private Double pay;
 
+    @NotNull
     private Double balance;
 
+    @NotNull
     private Double total;
 
     @ManyToOne(fetch = FetchType.LAZY)
