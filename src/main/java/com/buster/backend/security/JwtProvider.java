@@ -12,6 +12,8 @@ import java.time.Instant;
 import java.util.Base64;
 import java.util.Date;
 
+import static java.util.Date.from;
+
 @Service
 public class JwtProvider {
     @Value("${jwt.secret}")
@@ -31,7 +33,7 @@ public class JwtProvider {
         return Jwts.builder()
                 .setSubject(principal.getUsername())
                 .signWith(SignatureAlgorithm.HS256, secret)
-                .setExpiration(Date.from(Instant.now().plusMillis(jwtExpirationInMills)))
+                .setExpiration(from(Instant.now().plusMillis(jwtExpirationInMills)))
                 .compact();
     }
 
@@ -50,5 +52,18 @@ public class JwtProvider {
                 .parseClaimsJws(token)
                 .getBody();
         return claims.getSubject();
+    }
+
+    public String generateTokenWithUserName(String username) {
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(from(Instant.now()))
+                .signWith(SignatureAlgorithm.HS256, secret)
+                .setExpiration(from(Instant.now().plusMillis(jwtExpirationInMills)))
+                .compact();
+    }
+
+    public Long getJwtExpirationInMillis(){
+      return jwtExpirationInMills;
     }
 }
