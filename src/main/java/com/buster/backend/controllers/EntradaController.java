@@ -1,37 +1,47 @@
 package com.buster.backend.controllers;
 
+import com.buster.backend.common.ApiResponse;
 import com.buster.backend.dto.EntradaDto;
 import com.buster.backend.exceptions.NotFoundException;
 import com.buster.backend.service.EntradaService;
 import lombok.AllArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/entradas")
+@RequestMapping("/api/v1/entradas")
 @AllArgsConstructor
 public class EntradaController {
-    private final EntradaService entradaService;
+    @Autowired
+    private EntradaService entradaService;
 
     @PostMapping
-    public ResponseEntity<?> createEntrada(@RequestBody EntradaDto entradaDto) {
+    public ResponseEntity<ApiResponse> createEntrada(@RequestBody EntradaDto entradaDto) {
         Map<String, Object> resp = new HashMap<>();
         try {
             entradaService.save(entradaDto);
-            return new ResponseEntity<>("Guardado correctamente", HttpStatus.CREATED);
+	    return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("success", "Creado exitosamente", 201));
         } catch (NotFoundException e) {
-            resp.put("error", e.getMessage());
-            return new ResponseEntity<Map<String, Object>>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
+            resp.put("message", e.getMessage());
+	    resp.put("code", e.getCode());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ApiResponse("error", "Ha ocurrido un error", 404, resp));
         }
     }
 
     @GetMapping
-    public ResponseEntity<?> getAll() {
-        return ResponseEntity.status(HttpStatus.OK).body(entradaService.getAll());
-    }
+    public ResponseEntity<ApiResponse> getAll() {
+	List<EntradaDto> entradasList = entradaService.getAll();
 
+	Map<String, Object> data = new HashMap<>();
+	data.put("entradas", entradasList);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse("success", data));
+    }
 }

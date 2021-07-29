@@ -11,10 +11,15 @@ import com.buster.backend.repository.ProductRepository;
 import com.buster.backend.repository.VentaRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ReflectionUtils;
 
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -23,10 +28,14 @@ import java.util.stream.Collectors;
 @Slf4j
 public class VentaService {
 
-    private final ProductRepository productRepository;
-    private final VentaRepository ventaRepository;
-    private final AuthService authService;
-    private final VentaMapper ventaMapper;
+    @Autowired
+    private  ProductRepository productRepository;
+    @Autowired
+    private  VentaRepository ventaRepository;
+    @Autowired
+    private  AuthService authService;
+    @Autowired
+    private  VentaMapper ventaMapper;
 
     @Transactional
     public void save(VentaRequest ventaRequest) {
@@ -53,17 +62,23 @@ public class VentaService {
     }
 
     @Transactional
-    public void updatePay(Double pay, Long id) {
+    public void updatePay(Long id, Map<String, Object> fields) {
         Venta venta = ventaRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("No existe venta con id - " + id)
         );
-        if (pay > venta.getBalance()) {
-            throw new CustomException("El pago no puede superar el balance");
-        }
-        Double totalPay = venta.getPay() + pay;
-        Double balance = venta.getTotal() - totalPay;
-        venta.setPay(totalPay);
-        venta.setBalance(balance);
-        ventaRepository.save(venta);
+        fields.forEach(
+                (key, value)->{
+           if(key.equals("pay")){
+               Double pay = (Double) value;
+               if (pay > venta.getBalance()) {
+                   throw new CustomException("El pago no puede superar el balance");
+               }
+                   Double totalPay = venta.getPay() + pay;
+                   Double balance = venta.getTotal() - totalPay;
+                   venta.setPay(totalPay);
+                   venta.setBalance(balance);
+                   ventaRepository.save(venta);
+           }
+        });
     }
 }

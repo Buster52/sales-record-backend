@@ -1,16 +1,35 @@
 package com.buster.backend.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class RefreshTokenRequest {
     @NotBlank
-    private String refreshToken;
     private String username;
+    private String refreshToken;
+
+
+    public RefreshTokenRequest(String refreshToken, String username) {
+      this.refreshToken = refreshToken;
+      this.username = username;
+    }
+
+    public RefreshTokenRequest() {
+    }
+
+    public void setUsername(String username) {
+      this.username = username;
+    }
+
+    public String getUsername() {
+      return username;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+      this.refreshToken = refreshToken;
+    }
+
+    public String getRefreshToken() {
+      return refreshToken;
+    }
 }

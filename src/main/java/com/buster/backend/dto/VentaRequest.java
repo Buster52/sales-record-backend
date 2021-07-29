@@ -1,6 +1,5 @@
 package com.buster.backend.dto;
 
-import java.time.Instant;
 
 public class VentaRequest {
     private Long saleId;
