@@ -9,6 +9,8 @@ import com.buster.backend.repository.EntradaRepository;
 import com.buster.backend.repository.ProductRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,10 +23,14 @@ import java.util.stream.Collectors;
 @Slf4j
 public class EntradaService {
 
-    private final ProductRepository productRepository;
-    private final EntradaRepository entradaRepository;
-    private final EntradaMapper entradaMapper;
-    private final AuthService authService;
+  @Autowired
+    private  ProductRepository productRepository;
+  @Autowired
+    private  EntradaRepository entradaRepository;
+  @Autowired
+    private  EntradaMapper entradaMapper;
+  @Autowired
+    private  AuthService authService;
 
     @Transactional
     public void save(EntradaDto entradaDto) {

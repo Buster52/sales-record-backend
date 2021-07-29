@@ -14,6 +14,8 @@ import com.buster.backend.repository.ProductRepository;
 import com.buster.backend.repository.UsuarioRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,11 +26,16 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Slf4j
 public class ProductService {
-    private final UsuarioRepository usuarioRepository;
-    private final CategoriaRepository categoriaRepository;
-    private final ProductRepository productoRepo;
-    private final AuthService authService;
-    private final ProductoMapper productoMapper;
+  @Autowired
+    private  UsuarioRepository usuarioRepository;
+  @Autowired
+    private  CategoriaRepository categoriaRepository;
+  @Autowired
+    private  ProductRepository productoRepo;
+  @Autowired
+    private  AuthService authService;
+  @Autowired
+    private  ProductoMapper productoMapper;
 
     @Transactional
     public void save(ProductRequest productRequest) {
