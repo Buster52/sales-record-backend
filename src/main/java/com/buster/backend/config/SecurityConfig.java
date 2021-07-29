@@ -4,7 +4,6 @@ import com.buster.backend.security.JwtAuthenticationFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -34,13 +33,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/auth/**")
+                .antMatchers("/api/v1/auth/**")
                 .permitAll()
-                .antMatchers("/api/categoria")
+                .antMatchers("/api/v1/categorias")
                 .permitAll()
-                .antMatchers("/api/venta")
+                .antMatchers("/api/v1/ventas")
                 .permitAll()
-                .antMatchers("/api/entrada")
+                .antMatchers("/api/v1/entradas")
                 .permitAll()
                 .anyRequest()
                 .authenticated();
