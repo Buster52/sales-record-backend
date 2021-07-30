@@ -22,6 +22,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.parameters.P;
 
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -90,8 +92,11 @@ class VentaServiceTest {
     class testUpdatePay {
         @Test
         void throwExceptionIfSaleDoesNotExist() {
+            Map<String, Object> fields = new HashMap<>();
+            fields.put("pay", 12.0);
+
             assertThrows(NotFoundException.class, () -> {
-                ventaService.updatePay(12.0, 12L);
+                ventaService.updatePay(12L, fields);
             });
         }
 
@@ -100,9 +105,12 @@ class VentaServiceTest {
             Venta venta = new Venta(1234L, "buster", null, 1L,
                     5.0, 10.0, 15.0, null, Instant.now());
 
+            Map<String, Object> fields = new HashMap<>();
+            fields.put("pay", 5.0);
+
             Mockito.when(ventaRepository.findById(Mockito.anyLong())).thenReturn(Optional.of(venta));
 
-            ventaService.updatePay(5.0, 1234L);
+            ventaService.updatePay(1234L, fields);
 
             Assertions.assertThat(5.0).isEqualTo(venta.getBalance());
         }

@@ -1,6 +1,7 @@
 package com.buster.backend.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
@@ -25,6 +26,7 @@ public class Entrada {
     private Usuario usuario;
 
     @NotNull
+    @Min(value = 1, message = "La cantidad minima es 1")
     private int amount;
 
     private Instant date;
