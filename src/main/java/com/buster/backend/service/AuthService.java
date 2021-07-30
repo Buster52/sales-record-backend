@@ -12,6 +12,8 @@ import com.buster.backend.repository.UsuarioRepository;
 import com.buster.backend.repository.VerificationTokenRepository;
 import com.buster.backend.security.JwtProvider;
 import lombok.AllArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,13 +31,20 @@ import java.util.UUID;
 @AllArgsConstructor
 public class AuthService {
 
-    private final PasswordEncoder passwordEncoder;
-    private final UsuarioRepository usuarioRepository;
-    private final VerificationTokenRepository verificationTokenRepository;
-    private final MailService mailService;
-    private final AuthenticationManager authenticationManager;
-    private final JwtProvider jwtProvider;
-    private final RefreshTokenService refreshTokenService;
+    @Autowired
+    private  PasswordEncoder passwordEncoder;
+    @Autowired
+    private  UsuarioRepository usuarioRepository;
+    @Autowired
+    private  VerificationTokenRepository verificationTokenRepository;
+    @Autowired
+    private  MailService mailService;
+    @Autowired
+    private  AuthenticationManager authenticationManager;
+    @Autowired
+    private  JwtProvider jwtProvider;
+    @Autowired
+    private  RefreshTokenService refreshTokenService;
 
     @Transactional
     public void signup(RegisterRequest registerRequest) {
@@ -54,7 +63,7 @@ public class AuthService {
                 usuario.getEmail(),
                 "Thank you for signing up to Spring Reddit" +
                         "please click on the below url to activate your account: " +
-                        "http://localhost:8080/api/auth/accountVerification/" + token));
+                        "http://localhost:8080/api/v1/auth/accountVerification/" + token));
     }
 
     private String generateVerificationToken(Usuario usuario) {
